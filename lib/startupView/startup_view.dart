@@ -1,58 +1,67 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:main/categoriesPage/CategoriesView%20.dart';
 
-class startupview extends StatelessWidget {
-  const startupview({super.key});
+class StartupView extends StatefulWidget {
+  const StartupView({super.key});
+
+  @override
+  State<StartupView> createState() => _StartupViewState();
+}
+
+class _StartupViewState extends State<StartupView> {
+  @override
+  void initState() {
+    super.initState();
+
+    Timer(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const CategoriesView(),
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF215A9A),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 60),
+      body: Column(
+        children: [
+          const SizedBox(height: 80),
 
-            // Top Line
-            Center(
-              child: Container(
-                width: 80,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
+          Center(
+            child: Container(
+              width: 80,
+              height: 5,
+              color: Colors.white,
             ),
+          ),
 
-            const Spacer(),
+          const Spacer(),
 
-            // Title
-            const Text(
-              '_Chat Session',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Times New Roman',
-              ),
+          const Text(
+            '_Chat Session',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.w400,
             ),
+          ),
 
-            const Spacer(),
+          const Spacer(),
 
-            // Bottom Line
-            Padding(
-              padding: const EdgeInsets.only(bottom: 40),
-              child: Container(
-                width: 220,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 40),
+            child: Container(
+              width: 220,
+              height: 5,
+              color: Colors.white,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
