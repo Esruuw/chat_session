@@ -18,7 +18,7 @@ class _StartupViewState extends State<StartupView> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const CategoriesView(),
+          builder: (_) => const CategoriesScreen(),
         ),
       );
     });

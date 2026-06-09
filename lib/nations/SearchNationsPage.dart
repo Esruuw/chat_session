@@ -1,154 +1,417 @@
 import 'package:flutter/material.dart';
 
-class SearchNationsPage extends StatelessWidget {
-  const SearchNationsPage({super.key});
 
-  final List<String> countries = const [
-    "United State",
-    "Monaco",
-    "Luxemberg",
-    "Bermuda",
-    "Norway",
-    "Australia",
-    "United Kingdom",
-    "France",
+// ── Screen ───────────────────────────────────────────────────────────────────
+
+class SearchNationsScreen extends StatefulWidget {
+  const SearchNationsScreen({super.key});
+
+  @override
+  State<SearchNationsScreen> createState() => _SearchNationsScreenState();
+}
+
+class _SearchNationsScreenState extends State<SearchNationsScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  String _query = '';
+
+  static const List<String> _allNations = [
+    'United State',
+    'Monaco',
+    'Luxemberg',
+    'Bermuda',
+    'Norway',
+    'Australia',
+    'United Kingdom',
+    'France',
+    'Germany',
+    'Canada',
+    'Japan',
+    'Brazil',
+    'Italy',
+    'Spain',
+    'Netherlands',
+    'Sweden',
+    'Switzerland',
+    'New Zealand',
+    'South Korea',
+    'Singapore',
   ];
+
+  List<String> get _filtered => _query.isEmpty
+      ? _allNations
+      : _allNations
+          .where((n) => n.toLowerCase().contains(_query.toLowerCase()))
+          .toList();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/bg222.png"),
-            fit: BoxFit.cover,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // ── Galaxy background ──────────────────────────────────────────
+          Container(
+            decoration: const BoxDecoration(
+              gradient: RadialGradient(
+                center: Alignment(0.6, 0.3),
+                radius: 1.3,
+                colors: [
+                  Color(0xFF9B2FD9),
+                  Color(0xFF5A1090),
+                  Color(0xFF2A0860),
+                  Color(0xFF0A0420),
+                ],
+                stops: [0.0, 0.3, 0.65, 1.0],
+              ),
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
+          const _StarField(),
 
-              // Header
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                        size: 18,
+          // ── Foreground ─────────────────────────────────────────────────
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // App bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 14, vertical: 10),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.maybePop(context),
+                        child: const Icon(Icons.chevron_left,
+                            color: Colors.white, size: 28),
                       ),
-                    ),
-                    const Expanded(
-                      child: Center(
+                      const Expanded(
                         child: Text(
-                          "SEARCH NATIONS",
+                          'SEARCH NATIONS',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
+                            fontSize: 17,
                             fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            letterSpacing: 2.2,
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 40),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              // World Map
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 25),
-                height: 150,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                  image: const DecorationImage(
-                    image: AssetImage("assets/images/map.jpg"),
-                    fit: BoxFit.cover,
+                      const SizedBox(width: 28),
+                    ],
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 15),
+                // Scrollable body
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // World map image placeholder
+                        _WorldMapCard(),
+                        const SizedBox(height: 14),
 
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25),
-                child: Text(
-                  "WELCOME TO THE UNIVERSE OF\nPOSTS FOR GLOBAL ZZ VMAIL-ING",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Search Box
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Container(
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.85),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const TextField(
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.search),
-                      hintText: "Search WorlWide...",
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              // Country List
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  itemCount: countries.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 198, 194, 194).withOpacity(.25),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: ListTile(
-                        title: Text(
-                          countries[index],
-                          style: const TextStyle(
+                        // Welcome text
+                        const Text(
+                          'WELCOME TO THE UNIVERSE OF\nPOSTS FOR GLOBAL ZZ VMAIL-ING',
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 16,
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.bold,
+                            height: 1.45,
+                            letterSpacing: 0.3,
                           ),
                         ),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                          size: 16,
+                        const SizedBox(height: 14),
+
+                        // Search bar
+                        Container(
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.90),
+                            borderRadius: BorderRadius.circular(22),
+                          ),
+                          child: TextField(
+                            controller: _searchController,
+                            onChanged: (v) =>
+                                setState(() => _query = v),
+                            style: const TextStyle(
+                                color: Colors.black87, fontSize: 14),
+                            decoration: const InputDecoration(
+                              hintText: 'Search WorlWide...',
+                              hintStyle: TextStyle(
+                                  color: Colors.black45, fontSize: 14),
+                              prefixIcon: Icon(Icons.search,
+                                  color: Colors.black45, size: 20),
+                              border: InputBorder.none,
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
                         ),
-                        onTap: () {},
-                      ),
-                    );
-                  },
+                        const SizedBox(height: 10),
+
+                        // Nation list
+                        ..._filtered.map(
+                          (nation) => Padding(
+                            padding: const EdgeInsets.only(bottom: 7),
+                            child: _NationRow(
+                              label: nation,
+                              onTap: () {},
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── World map card ────────────────────────────────────────────────────────────
+
+class _WorldMapCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 150,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.93),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white30),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(11),
+        child: Stack(
+          children: [
+            // Map background — painted continents
+            CustomPaint(
+              painter: _WorldMapPainter(),
+              child: const SizedBox.expand(),
+            ),
+            // "WORLD MAP" label top-left
+            const Positioned(
+              top: 6,
+              left: 8,
+              child: Text(
+                'WORLD MAP',
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+}
+
+class _WorldMapPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Ocean background
+    canvas.drawRect(
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      Paint()..color = const Color(0xFFB8D4E8),
+    );
+
+    final landPaint = Paint()..style = PaintingStyle.fill;
+
+    // --- North America ---
+    landPaint.color = const Color(0xFF8FBC5A);
+    final na = Path()
+      ..moveTo(size.width * 0.05, size.height * 0.15)
+      ..lineTo(size.width * 0.22, size.height * 0.10)
+      ..lineTo(size.width * 0.26, size.height * 0.20)
+      ..lineTo(size.width * 0.24, size.height * 0.50)
+      ..lineTo(size.width * 0.18, size.height * 0.60)
+      ..lineTo(size.width * 0.10, size.height * 0.55)
+      ..lineTo(size.width * 0.05, size.height * 0.40)
+      ..close();
+    canvas.drawPath(na, landPaint);
+
+    // --- South America ---
+    landPaint.color = const Color(0xFF6BAA3A);
+    final sa = Path()
+      ..moveTo(size.width * 0.18, size.height * 0.62)
+      ..lineTo(size.width * 0.26, size.height * 0.60)
+      ..lineTo(size.width * 0.27, size.height * 0.85)
+      ..lineTo(size.width * 0.20, size.height * 0.92)
+      ..lineTo(size.width * 0.15, size.height * 0.85)
+      ..lineTo(size.width * 0.16, size.height * 0.68)
+      ..close();
+    canvas.drawPath(sa, landPaint);
+
+    // --- Europe ---
+    landPaint.color = const Color(0xFFD4A84B);
+    final eu = Path()
+      ..moveTo(size.width * 0.42, size.height * 0.12)
+      ..lineTo(size.width * 0.55, size.height * 0.10)
+      ..lineTo(size.width * 0.56, size.height * 0.30)
+      ..lineTo(size.width * 0.48, size.height * 0.35)
+      ..lineTo(size.width * 0.42, size.height * 0.28)
+      ..close();
+    canvas.drawPath(eu, landPaint);
+
+    // --- Africa ---
+    landPaint.color = const Color(0xFFD4884B);
+    final af = Path()
+      ..moveTo(size.width * 0.44, size.height * 0.36)
+      ..lineTo(size.width * 0.56, size.height * 0.34)
+      ..lineTo(size.width * 0.57, size.height * 0.75)
+      ..lineTo(size.width * 0.50, size.height * 0.88)
+      ..lineTo(size.width * 0.44, size.height * 0.78)
+      ..lineTo(size.width * 0.42, size.height * 0.55)
+      ..close();
+    canvas.drawPath(af, landPaint);
+
+    // --- Asia ---
+    landPaint.color = const Color(0xFFB8C45A);
+    final asia = Path()
+      ..moveTo(size.width * 0.56, size.height * 0.10)
+      ..lineTo(size.width * 0.88, size.height * 0.08)
+      ..lineTo(size.width * 0.90, size.height * 0.15)
+      ..lineTo(size.width * 0.85, size.height * 0.45)
+      ..lineTo(size.width * 0.72, size.height * 0.55)
+      ..lineTo(size.width * 0.60, size.height * 0.48)
+      ..lineTo(size.width * 0.57, size.height * 0.32)
+      ..close();
+    canvas.drawPath(asia, landPaint);
+
+    // --- Australia ---
+    landPaint.color = const Color(0xFFD4A84B);
+    final aus = Path()
+      ..moveTo(size.width * 0.74, size.height * 0.60)
+      ..lineTo(size.width * 0.88, size.height * 0.58)
+      ..lineTo(size.width * 0.90, size.height * 0.78)
+      ..lineTo(size.width * 0.78, size.height * 0.84)
+      ..lineTo(size.width * 0.73, size.height * 0.74)
+      ..close();
+    canvas.drawPath(aus, landPaint);
+
+    // Graticule lines (lat/lon grid)
+    final gridPaint = Paint()
+      ..color = Colors.white.withOpacity(0.25)
+      ..strokeWidth = 0.5;
+    // Horizontal
+    for (double y = 0.25; y < 1.0; y += 0.25) {
+      canvas.drawLine(Offset(0, size.height * y),
+          Offset(size.width, size.height * y), gridPaint);
+    }
+    // Vertical
+    for (double x = 0.2; x < 1.0; x += 0.2) {
+      canvas.drawLine(Offset(size.width * x, 0),
+          Offset(size.width * x, size.height), gridPaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+// ── Nation row ────────────────────────────────────────────────────────────────
+
+class _NationRow extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const _NationRow({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+        decoration: BoxDecoration(
+          color: const Color(0xFFCEC8DA).withOpacity(0.78),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const Icon(Icons.chevron_right,
+                color: Colors.black54, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Star field ────────────────────────────────────────────────────────────────
+
+class _StarField extends StatelessWidget {
+  const _StarField();
+
+  @override
+  Widget build(BuildContext context) =>
+      CustomPaint(painter: _StarPainter(), child: const SizedBox.expand());
+}
+
+class _StarPainter extends CustomPainter {
+  static const List<Offset> _pos = [
+    Offset(0.05, 0.05), Offset(0.14, 0.19), Offset(0.27, 0.04),
+    Offset(0.39, 0.12), Offset(0.53, 0.02), Offset(0.67, 0.16),
+    Offset(0.79, 0.06), Offset(0.91, 0.21), Offset(0.97, 0.09),
+    Offset(0.08, 0.37), Offset(0.21, 0.50), Offset(0.35, 0.46),
+    Offset(0.49, 0.57), Offset(0.62, 0.43), Offset(0.75, 0.55),
+    Offset(0.88, 0.48), Offset(0.04, 0.67), Offset(0.16, 0.78),
+    Offset(0.32, 0.70), Offset(0.46, 0.83), Offset(0.60, 0.73),
+    Offset(0.73, 0.86), Offset(0.85, 0.76), Offset(0.97, 0.90),
+    Offset(0.11, 0.93), Offset(0.54, 0.91), Offset(0.79, 0.63),
+    Offset(0.22, 0.30), Offset(0.66, 0.66), Offset(0.43, 0.22),
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (int i = 0; i < _pos.length; i++) {
+      final r = (i % 3 == 0) ? 1.4 : (i % 3 == 1) ? 0.9 : 0.6;
+      canvas.drawCircle(
+        Offset(_pos[i].dx * size.width, _pos[i].dy * size.height),
+        r,
+        Paint()..color = Colors.white.withOpacity(0.65),
+      );
+    }
+    final bright = Paint()..color = Colors.white.withOpacity(0.92);
+    canvas.drawCircle(
+        Offset(size.width * 0.83, size.height * 0.25), 2.0, bright);
+    canvas.drawCircle(
+        Offset(size.width * 0.12, size.height * 0.58), 1.8, bright);
+    canvas.drawCircle(
+        Offset(size.width * 0.50, size.height * 0.36), 1.5, bright);
+    canvas.drawCircle(
+        Offset(size.width * 0.30, size.height * 0.74), 1.6, bright);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
