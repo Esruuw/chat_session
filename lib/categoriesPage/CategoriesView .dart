@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:main/nations/SearchNationsPage.dart';
 
 // ── Screen ───────────────────────────────────────────────────────────────────
 
@@ -161,7 +162,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     itemBuilder: (context, index) {
                       return _CategoryRow(
                         label: _filtered[index],
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const SearchNationsScreen(),
+                            ),
+                          );
+                        },
                       );
                     },
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:main/login/CreateAccountView.dart';
+import 'package:main/postview/postview.dart';
+import 'package:main/search/searchscreen.dart';
 // ── Screen ───────────────────────────────────────────────────────────────────
 
 class SearchNationsScreen extends StatefulWidget {
@@ -163,7 +164,13 @@ class _SearchNationsScreenState extends State<SearchNationsScreen> {
                             padding: const EdgeInsets.only(bottom: 7),
                             child: _NationRow(
                               label: nation,
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const SearchScreen(),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -197,21 +204,55 @@ class _WorldMapCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(11),
         child: Stack(
+          fit: StackFit.expand,
           children: [
-            // Map background — painted continents
-            CustomPaint(
-              painter: _WorldMapPainter(),
-              child: const SizedBox.expand(),
+            Image.network(
+
+'https://www.bing.com/images/search?view=detailV2&ccid=PKBa7SLM&id=EFB0BDD58F21E861786379DC75FC046599B4726E&thid=OIP.PKBa7SLM90o5SxRN0PwvNAHaFS&mediaurl=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Fd6%2Fb7%2F14%2Fd6b71417ffbb1aefec36c20aeec55ec2.jpg&exph=857&expw=1200&q=world+map&form=IRPRST&ck=F5D631C061249273175C921398FFE56B&selectedindex=12&itb=0&cw=1272&ch=596&ajaxhist=0&ajaxserp=0&cdnurl=https%3A%2F%2Fth.bing.com%2Fth%2Fid%2FR.3ca05aed22ccf74a394b144dd0fc2f34%3Frik%3DbnK0mWUE%252fHXceQ%26pid%3DImgRaw%26r%3D0&pivotparams=insightsToken%3Dccid_2urLCE9V*cp_E02D4E5DE8B774E5DF30F959EB00DB71*mid_C9BF733150DCDDF344E3E3DB5CAD14A290CCC5BF*thid_OIP.2urLCE9VYUtoW7vvySWI0wHaEy&vt=0&sim=11&iss=VSI&ajaxhist=0&ajaxserp=0',              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  color: Colors.blueGrey.shade200,
+                  child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: Colors.blueGrey.shade200,
+                  child: const Center(
+                    child: Text(
+                      'Map unavailable',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-            // "WORLD MAP" label top-left
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.black.withOpacity(0.0),
+                    Colors.black.withOpacity(0.35),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
             const Positioned(
               top: 6,
               left: 8,
               child: Text(
                 'WORLD MAP',
                 style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 9,
+                  color: Colors.white,
+                  fontSize: 10,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1,
                 ),

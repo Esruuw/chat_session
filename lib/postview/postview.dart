@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:main/Carts/cartpage.dart';
+import 'package:main/cartpage2/cartpage2.dart' hide CartScreen;
+import 'package:main/savedpage/savedpage.dart';
+import 'package:main/search/searchscreen.dart';
 
 class postview extends StatelessWidget {
   const postview({super.key});
@@ -222,7 +226,13 @@ class _BlackLampScreenState extends State<BlackLampScreen> {
                             width: double.infinity,
                             height: 52,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const CartScreen(),
+                                  ),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF7B3FF5),
                                 foregroundColor: Colors.white,

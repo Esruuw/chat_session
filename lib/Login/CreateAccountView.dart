@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:main/nations/SearchNationsPage.dart';
+import 'package:main/search/searchscreen.dart';
 
 
 
@@ -81,6 +83,17 @@ class _GlobalVMailsScreenState extends State<GlobalVMailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  // ── Back button ─────────────────────────────────────────
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () => Navigator.maybePop(context),
+                      child: const Icon(Icons.chevron_left,
+                          color: Colors.white, size: 28),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
                   // ── Logo ────────────────────────────────────────────────
                   const _GlobeLogo(),
                   const SizedBox(height: 10),
@@ -209,7 +222,13 @@ class _GlobalVMailsScreenState extends State<GlobalVMailsScreen> {
                     width: double.infinity,
                     height: 52,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const SearchScreen(),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6B2FD9),
                         foregroundColor: Colors.white,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:main/Carts/cartpage.dart';
-import 'package:main/Login/CreateAccountView.dart';
+import 'package:main/login/CreateAccountView.dart';
 import 'package:main/cartpage2/cartpage2.dart';
 import 'package:main/categoriesPage/CategoriesView%20.dart';
 import 'package:main/createpost/createpost.dart';
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget
   {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const GlobalVMailsScreen(),
+      home: const StartupView(),
     );
   }
 }

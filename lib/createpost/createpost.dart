@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:main/managerpage/managerpage.dart';
 
 
-class CreatePostApp extends StatelessWidget {
-  const CreatePostApp({super.key});
+// class CreatePostApp extends StatelessWidget {
+//   const CreatePostApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Create Post',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true),
-      home: const CreatePostScreen(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Create Post',
+//       debugShowCheckedModeBanner: false,
+//       theme: ThemeData(useMaterial3: true),
+//       home: const CreatePostScreen(),
+//     );
+//   }
+// }
 
 // ── Screen ───────────────────────────────────────────────────────────────────
 
@@ -254,7 +255,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           width: double.infinity,
                           height: 52,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const Managerpage(),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF6B2FD9),
                               foregroundColor: Colors.white,

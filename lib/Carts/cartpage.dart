@@ -1,41 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:main/createpost/createpost.dart';
 
+void main() {
+  runApp(const MyApp());
+}
 
-
-class cartpage extends StatelessWidget {
-   cartpage({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Search Screen',
+      title: 'Cart',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const SearchScreen(),
+      theme: ThemeData(useMaterial3: true),
+      home: const CartScreen(),
     );
   }
 }
 
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+// ── Data model ───────────────────────────────────────────────────────────────
 
-  @override
-  State<SearchScreen> createState() => _SearchScreenState();
+class _VideoPackage {
+  final int sessions;
+  final double price;
+  const _VideoPackage({required this.sessions, required this.price});
+
+  String get label =>
+      '${sessions} video Session${sessions > 1 ? '' : ''}';
+  String get priceLabel => '\$${price.toInt()}';
 }
 
-class _SearchScreenState extends State<SearchScreen> {
-  int _selectedNavIndex = 2; // Category selected by default
+// ── Screen ───────────────────────────────────────────────────────────────────
 
-  final List<_NavItem> _navItems = const [
-    _NavItem(icon: Icons.language, label: 'Global'),
-    _NavItem(icon: Icons.home, label: 'Home'),
-    _NavItem(icon: Icons.grid_view, label: 'Category'),
-    _NavItem(icon: Icons.shopping_cart_outlined, label: 'Cart'),
-    _NavItem(icon: Icons.add_circle_outline, label: 'Post'),
+class CartScreen extends StatefulWidget {
+  const CartScreen({super.key});
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  final List<_VideoPackage> _packages = const [
+    _VideoPackage(sessions: 5, price: 10),
+    _VideoPackage(sessions: 10, price: 20),
+    _VideoPackage(sessions: 20, price: 40),
+    _VideoPackage(sessions: 40, price: 80),
   ];
+
+  int _selectedIndex = 0; // first item pre-selected (checked)
 
   @override
   Widget build(BuildContext context) {
@@ -43,161 +56,105 @@ class _SearchScreenState extends State<SearchScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Galaxy/Space background
+          // ── Galaxy background ──────────────────────────────────────────
           Container(
             decoration: const BoxDecoration(
               gradient: RadialGradient(
-                center: Alignment(0.3, -0.5),
-                radius: 1.2,
+                center: Alignment(0.4, -0.2),
+                radius: 1.4,
                 colors: [
-                  Color(0xFF6B1FA8),
-                  Color(0xFF3A0D6E),
-                  Color(0xFF1A0A3A),
-                  Color(0xFF0A0520),
+                  Color(0xFF8B2FC9),
+                  Color(0xFF5A1090),
+                  Color(0xFF2A0860),
+                  Color(0xFF0D0520),
                 ],
-                stops: [0.0, 0.35, 0.65, 1.0],
+                stops: [0.0, 0.3, 0.6, 1.0],
               ),
             ),
           ),
-          // Stars overlay
           const _StarField(),
 
-          // Main content
+          // ── Content ───────────────────────────────────────────────────
           SafeArea(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // App bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 12),
                   child: Row(
                     children: [
-                      // Search bar
-                      Expanded(
-                        child: Container(
-                          height: 44,
-                          decoration: BoxDecoration(
+                      GestureDetector(
+                        onTap: () => Navigator.maybePop(context),
+                        child: const Icon(Icons.chevron_left,
+                            color: Colors.white, size: 30),
+                      ),
+                      const Expanded(
+                        child: Text(
+                          'CART',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(22),
-                          ),
-                          child: const Row(
-                            children: [
-                              SizedBox(width: 12),
-                              Icon(Icons.search, color: Colors.grey),
-                              SizedBox(width: 8),
-                              Text(
-                                'Search Here!',
-                                style: TextStyle(color: Colors.grey, fontSize: 15),
-                              ),
-                            ],
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2.5,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      // Profile icon
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(Icons.person_outline, color: Colors.black87),
-                      ),
+                      // balance spacer
+                      const SizedBox(width: 30),
                     ],
                   ),
                 ),
 
-                // Navigation bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF2A1550).withOpacity(0.85),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Colors.white12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: List.generate(_navItems.length, (index) {
-                        final item = _navItems[index];
-                        final isSelected = index == _selectedNavIndex;
-                        return GestureDetector(
-                          onTap: () => setState(() => _selectedNavIndex = index),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? const Color(0xFFD4C84A)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  item.icon,
-                                  color: isSelected ? Colors.black87 : Colors.white70,
-                                  size: 22,
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  item.label,
-                                  style: TextStyle(
-                                    color: isSelected ? Colors.black87 : Colors.white70,
-                                    fontSize: 10,
-                                    fontWeight: isSelected
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 10),
 
-                // Info text
+                // Section label
                 const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 18),
                   child: Text(
-                    'SEARCH BY PHONE, LOCATION, USERNAME OR USER ID. LEAVE A VOICE INTRO AND SCHEDULE A VIDEO MEET.',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w500,
-                      height: 1.4,
-                    ),
-                  ),
-                ),
-
-                // Results count
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    '12 results found',
+                    'PURCHASE YOUR VIDEO CHATS',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 13,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.8,
                     ),
                   ),
                 ),
 
-                // Grid of cards
+                const SizedBox(height: 14),
+
+                // Package list
                 Expanded(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                      childAspectRatio: 0.82,
-                    ),
-                    itemCount: 12,
-                    itemBuilder: (context, index) => const _BusinessCard(),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    itemCount: _packages.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      final pkg = _packages[index];
+                      final isSelected = index == _selectedIndex;
+                      return _PackageRow(
+                        package: pkg,
+                        isSelected: isSelected,
+                        onTap: () => setState(() => _selectedIndex = index),
+                      );
+                    },
+                  ),
+                ),
+
+                // Pay with Google button
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                  child: _GooglePayButton(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const CreatePostScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -209,146 +166,272 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-class _BusinessCard extends StatefulWidget {
-  const _BusinessCard();
+// ── Package row card ─────────────────────────────────────────────────────────
 
-  @override
-  State<_BusinessCard> createState() => _BusinessCardState();
-}
+class _PackageRow extends StatelessWidget {
+  final _VideoPackage package;
+  final bool isSelected;
+  final VoidCallback onTap;
 
-class _BusinessCardState extends State<_BusinessCard> {
-  bool _isFavorited = true;
+  const _PackageRow({
+    required this.package,
+    required this.isSelected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFB0AAAA).withOpacity(0.82),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'John Doe',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      'Personal Business',
-                      style: TextStyle(fontSize: 11, color: Colors.black54),
-                    ),
-                    Text(
-                      'Addis Abeba',
-                      style: TextStyle(fontSize: 11, color: Colors.black54),
-                    ),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () => setState(() => _isFavorited = !_isFavorited),
-                child: Icon(
-                  _isFavorited ? Icons.favorite : Icons.favorite_border,
-                  color: _isFavorited ? Colors.red : Colors.grey,
-                  size: 20,
-                ),
-              ),
-            ],
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFD8D0E8).withOpacity(0.88),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected
+                ? const Color(0xFF7B3FF5)
+                : Colors.transparent,
+            width: 2,
           ),
-          const SizedBox(height: 8),
-          const Expanded(
-            child: Text(
-              'Use the visual style of the last page card Use the visual style of the last page card',
-              style: TextStyle(
-                fontSize: 11,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF7B3FF5).withOpacity(0.35),
+                    blurRadius: 10,
+                    spreadRadius: 1,
+                  )
+                ]
+              : [],
+        ),
+        child: Row(
+          children: [
+            // Checkbox
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              width: 22,
+              height: 22,
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? const Color(0xFF3A2080)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                  color: isSelected
+                      ? const Color(0xFF3A2080)
+                      : Colors.black45,
+                  width: 2,
+                ),
+              ),
+              child: isSelected
+                  ? const Icon(Icons.check,
+                      size: 15, color: Colors.white)
+                  : null,
+            ),
+            const SizedBox(width: 14),
+
+            // Label
+            Expanded(
+              child: Text(
+                package.label,
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+
+            // Price
+            Text(
+              package.priceLabel,
+              style: const TextStyle(
                 color: Colors.black87,
-                height: 1.4,
-              ),
-              overflow: TextOverflow.fade,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              '\$2PV',
-              style: TextStyle(
-                fontSize: 14,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
-                color: Colors.black.withOpacity(0.75),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-// Simple decorative star field painted on canvas
-class _StarField extends StatelessWidget {
-  const _StarField();
+// ── Google Pay button ────────────────────────────────────────────────────────
+
+class _GooglePayButton extends StatelessWidget {
+  final VoidCallback onTap;
+  const _GooglePayButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 54,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.18),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Google "G" logo painted manually
+            const _GoogleLogo(size: 26),
+            const SizedBox(width: 10),
+            const Text(
+              'Pay with Google',
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.2,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Google logo (4-color "G") ────────────────────────────────────────────────
+
+class _GoogleLogo extends StatelessWidget {
+  final double size;
+  const _GoogleLogo({required this.size});
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _StarPainter(),
-      child: const SizedBox.expand(),
+      size: Size(size, size),
+      painter: _GoogleLogoPainter(),
     );
   }
 }
 
-class _StarPainter extends CustomPainter {
-  static const List<Offset> _starPositions = [
-    Offset(0.05, 0.08), Offset(0.12, 0.22), Offset(0.25, 0.05),
-    Offset(0.38, 0.15), Offset(0.52, 0.03), Offset(0.65, 0.18),
-    Offset(0.78, 0.07), Offset(0.90, 0.25), Offset(0.95, 0.12),
-    Offset(0.08, 0.40), Offset(0.20, 0.55), Offset(0.35, 0.48),
-    Offset(0.48, 0.60), Offset(0.62, 0.45), Offset(0.75, 0.58),
-    Offset(0.88, 0.50), Offset(0.03, 0.70), Offset(0.15, 0.80),
-    Offset(0.30, 0.72), Offset(0.45, 0.85), Offset(0.60, 0.75),
-    Offset(0.72, 0.88), Offset(0.85, 0.78), Offset(0.97, 0.92),
-    Offset(0.10, 0.95), Offset(0.55, 0.92), Offset(0.80, 0.65),
-  ];
-
+class _GoogleLogoPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white.withOpacity(0.7);
-    for (int i = 0; i < _starPositions.length; i++) {
-      final pos = _starPositions[i];
-      final radius = (i % 3 == 0) ? 1.5 : (i % 3 == 1) ? 1.0 : 0.7;
-      canvas.drawCircle(
-        Offset(pos.dx * size.width, pos.dy * size.height),
-        radius,
-        paint,
-      );
-    }
+    final r = size.width / 2;
+    final cx = r;
+    final cy = r;
 
-    // A few brighter/larger stars
-    final brightPaint = Paint()..color = Colors.white.withOpacity(0.95);
-    canvas.drawCircle(Offset(size.width * 0.82, size.height * 0.30), 2.2, brightPaint);
-    canvas.drawCircle(Offset(size.width * 0.18, size.height * 0.65), 2.0, brightPaint);
-    canvas.drawCircle(Offset(size.width * 0.50, size.height * 0.50), 1.8, brightPaint);
+    // Clip to circle
+    canvas.clipPath(Path()..addOval(Rect.fromCircle(center: Offset(cx, cy), radius: r)));
+
+    // Red top-right arc
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(cx, cy), radius: r),
+      -1.57, // -90 deg
+      1.57,  // 90 deg
+      true,
+      Paint()..color = const Color(0xFFEA4335),
+    );
+    // Blue bottom-right
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(cx, cy), radius: r),
+      0,
+      1.57,
+      true,
+      Paint()..color = const Color(0xFF4285F4),
+    );
+    // Green bottom-left
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(cx, cy), radius: r),
+      1.57,
+      1.57,
+      true,
+      Paint()..color = const Color(0xFF34A853),
+    );
+    // Yellow top-left
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(cx, cy), radius: r),
+      3.14,
+      1.57,
+      true,
+      Paint()..color = const Color(0xFFFBBC05),
+    );
+
+    // Inner white circle (donut)
+    canvas.drawCircle(
+      Offset(cx, cy),
+      r * 0.60,
+      Paint()..color = Colors.white,
+    );
+
+    // Blue horizontal bar (the crossbar of the G)
+    final barH = r * 0.28;
+    canvas.drawRect(
+      Rect.fromLTRB(cx, cy - barH / 2, cx + r, cy + barH / 2),
+      Paint()..color = const Color(0xFF4285F4),
+    );
+
+    // Re-draw inner white circle to clean up bar overflow on left
+    canvas.drawCircle(
+      Offset(cx, cy),
+      r * 0.60,
+      Paint()..color = Colors.white,
+    );
+
+    // Final blue sector + bar redraw (right half only)
+    canvas.drawRect(
+      Rect.fromLTRB(cx, cy - barH / 2, cx + r * 0.42, cy + barH / 2),
+      Paint()..color = const Color(0xFF4285F4),
+    );
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-class _NavItem {
-  final IconData icon;
-  final String label;
-  const _NavItem({required this.icon, required this.label});
+// ── Star field ───────────────────────────────────────────────────────────────
+
+class _StarField extends StatelessWidget {
+  const _StarField();
+
+  @override
+  Widget build(BuildContext context) =>
+      CustomPaint(painter: _StarPainter(), child: const SizedBox.expand());
+}
+
+class _StarPainter extends CustomPainter {
+  static const List<Offset> _pos = [
+    Offset(0.05, 0.05), Offset(0.14, 0.19), Offset(0.27, 0.04),
+    Offset(0.39, 0.12), Offset(0.53, 0.02), Offset(0.67, 0.16),
+    Offset(0.79, 0.06), Offset(0.91, 0.21), Offset(0.97, 0.09),
+    Offset(0.08, 0.37), Offset(0.21, 0.50), Offset(0.35, 0.46),
+    Offset(0.49, 0.57), Offset(0.62, 0.43), Offset(0.75, 0.55),
+    Offset(0.88, 0.48), Offset(0.04, 0.67), Offset(0.16, 0.78),
+    Offset(0.32, 0.70), Offset(0.46, 0.83), Offset(0.60, 0.73),
+    Offset(0.73, 0.86), Offset(0.85, 0.76), Offset(0.97, 0.90),
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (int i = 0; i < _pos.length; i++) {
+      final r = (i % 3 == 0) ? 1.4 : (i % 3 == 1) ? 0.9 : 0.6;
+      canvas.drawCircle(
+        Offset(_pos[i].dx * size.width, _pos[i].dy * size.height),
+        r,
+        Paint()..color = Colors.white.withOpacity(0.65),
+      );
+    }
+    final bright = Paint()..color = Colors.white.withOpacity(0.92);
+    canvas.drawCircle(Offset(size.width * 0.84, size.height * 0.27), 2.0, bright);
+    canvas.drawCircle(Offset(size.width * 0.13, size.height * 0.61), 1.8, bright);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

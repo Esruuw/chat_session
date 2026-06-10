@@ -27,9 +27,22 @@ class _StartupViewState extends State<StartupView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF215A9A),
-      body: Column(
-        children: [
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment(0.5, 0.2),
+            radius: 1.4,
+            colors: [
+              Color(0xFF9B2FD9),
+              Color(0xFF5A1090),
+              Color(0xFF2A0860),
+              Color(0xFF0A0420),
+            ],
+            stops: [0.0, 0.3, 0.65, 1.0],
+          ),
+        ),
+        child: Column(
+          children: [
           const SizedBox(height: 80),
 
           Center(
@@ -63,6 +76,7 @@ class _StartupViewState extends State<StartupView> {
           ),
         ],
       ),
+      )
     );
   }
 }
